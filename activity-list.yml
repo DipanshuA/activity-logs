@@ -2,19 +2,26 @@ name: Daily Commit
 
 on:
   schedule:
-    - cron: "0 0 * * *" # Runs every day at 00:00 UTC
+    - cron: '0 6 * * *'  # Every day at 6 AM UTC (~11:30 AM IST)
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
       - name: Make a commit
         run: |
-          echo "$(date)" >> activity.log
-          git config user.name "Your Name"
-          git config user.email "you@example.com"
-          git add .
-          git commit -m "Daily update" || exit 0
-          git push
+          echo "$(date)" >> daily-log.txt
+          git config user.name "DipanshuA"
+          git config user.email "silentaddy6@gmail.com"
+          git add daily-log.txt
+          git commit -m "Daily update" || echo "No changes to commit"
+
+      - name: Push changes
+        uses: ad-m/github-push-action@v0.8.0
+        with:
+          github_token: ${{ secrets.PERSONAL_TOKEN }}
